@@ -13,7 +13,9 @@ public:
 		GenerateIteratedTable();
 	}
 	~HashTable(){
-
+		for(unsigned int i = 0; i < MAXHASH; i++){
+			delete theTable[i];
+		}
 	}
 
 	void GenerateRandomTable(){
