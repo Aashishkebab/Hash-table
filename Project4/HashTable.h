@@ -5,7 +5,7 @@
 template <class T> class HashTable{
 private:
 	unsigned int pseudoRandomTable[MAXHASH];
-	Slot<T> theTable[MAXHASH];
+	Slot<T>* theTable[MAXHASH];
 
 public:
 	HashTable(){
@@ -26,20 +26,24 @@ public:
 	}
 	void GenerateIteratedTable(){
 		for(unsigned int i = 0; i < MAXHASH; i++){
-			theTable[i] = Slot<T>();
+			theTable[i] = new Slot<T>();
 		}
-	}
-
-	bool keyExists(int key){
-		return false;
 	}
 
 	bool insert(int key, T value, int& collisions){
-		unsigned int spot;
-		do{
-			spot = dumbHash(key + spot);
+		collisions = 0;
+		unsigned int spot = dumbHash(key);
+		unsigned int originalHash = spot;
+		while(!(theTable[spot])->isEmpty()){	//If collision
+			collisions++;
+			spot = (originalHash + pseudoRandomTable[spot]) % MAXHASH;	//Calculate new spot
+			if(collisions >= MAXHASH){
+				return false;
+			}
 		}
-		while((theTable[spot]).isEmpty());
+
+		theTable[spot] = new Slot<T>(key, value);
+		return true;
 	}
 
 	bool remove(int key){
