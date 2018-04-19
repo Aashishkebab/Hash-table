@@ -53,7 +53,25 @@ public:
 	}
 
 	bool remove(int key){
+		unsigned int spot = dumbHash(key);
+		if((theTable[spot])->getKey() == key){
+			(theTable[spot])->kill();
+			return true;
+		}
 
+		for(unsigned int collisions = 0, originalHash = spot; (theTable[spot])->isTombstone() || (!((theTable[spot])->isEmpty()) && !((theTable[spot])->getKey() == key)); spot = (originalHash + pseudoRandomTable[spot]) % MAXHASH){
+			//Since this for loop looks weird, allow me to explain...
+			//It starts with zero collisions and setting the originalHash.
+			//Every iteration, it increases the collision counter, and pseudo-random probes.
+			//If currently and not a match, or previously occupied, continue
+			collisions++;
+			if(collisions >= MAXHASH){
+				return false;
+			}
+		}
+
+		(theTable[spot])->kill();
+		return true;
 	}
 
 	bool find(int key, T& value){
@@ -63,7 +81,7 @@ public:
 			return true;
 		}
 
-		for(unsigned int collisions = 0, originalHash = spot; (!(theTable[spot])->isEmpty() || !(theTable[spot])->isTombstone()) && !((theTable[spot])->getKey() == key); spot = (originalHash + pseudoRandomTable[spot]) % MAXHASH){
+		for(unsigned int collisions = 0, originalHash = spot; (theTable[spot])->isTombstone() || (!((theTable[spot])->isEmpty()) && !((theTable[spot])->getKey() == key)); spot = (originalHash + pseudoRandomTable[spot]) % MAXHASH){
 			//Since this for loop looks weird, allow me to explain...
 			//It starts with zero collisions and setting the originalHash.
 			//Every iteration, it increases the collision counter, and pseudo-random probes.
