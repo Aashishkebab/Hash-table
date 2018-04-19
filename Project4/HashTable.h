@@ -38,10 +38,10 @@ public:
 		unsigned int originalHash = spot;
 
 		while(!(theTable[spot])->isEmpty()){	//If collision
-			spot = (originalHash + pseudoRandomTable[spot]) % MAXHASH;	//Calculate new spot (h(K) + ri) mod M
 			if(key == theTable[spot]->getKey()){	//No duplicates
 				return false;
 			}
+			spot = (originalHash + pseudoRandomTable[spot]) % MAXHASH;	//Calculate new spot (h(K) + ri) mod M
 			collisions++;
 			if(collisions >= MAXHASH){
 				return false;
@@ -69,11 +69,13 @@ public:
 			//Every iteration, it increases the collision counter, and pseudo-random probes.
 			//If currently or previously occupied and not a match, continue the search.
 			collisions++;
-			if(theTable[])
 			if(collisions >= MAXHASH){
 				return false;
 			}
 		}
+
+		value = (theTable[spot])->getValue();
+		return true;
 	}
 
 	float alpha(){
