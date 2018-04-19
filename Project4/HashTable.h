@@ -1,11 +1,14 @@
 #pragma once
 #include "Slot.h"	//No cpp file because the requirements/instructions were contradictory
-#define MAXHASH 10	//TODO - change to 1000
+#define MAXHASH 1000
+
+unsigned int doHash(int key);
 
 template <class T> class HashTable{
 private:
 	unsigned int pseudoRandomTable[MAXHASH];
 	Slot<T>* theTable[MAXHASH];
+	unsigned int filledSlots = 0;
 
 public:
 	HashTable(){
@@ -34,7 +37,7 @@ public:
 
 	bool insert(int key, T value, int& collisions){
 		collisions = 0;
-		unsigned int spot = dumbHash(key);
+		unsigned int spot = doHash(key);
 		unsigned int originalHash = spot;
 
 		while(!(theTable[spot])->isEmpty()){	//If collision
@@ -49,11 +52,12 @@ public:
 		}
 
 		theTable[spot] = new Slot<T>(key, value);
+		this->filledSlots++;
 		return true;
 	}
 
 	bool remove(int key){
-		unsigned int spot = dumbHash(key);
+		unsigned int spot = doHash(key);
 		if((theTable[spot])->getKey() == key){
 			(theTable[spot])->kill();
 			return true;
@@ -75,7 +79,7 @@ public:
 	}
 
 	bool find(int key, T& value){
-		unsigned int spot = dumbHash(key);
+		unsigned int spot = doHash(key);
 		if((theTable[spot])->getKey() == key){
 			value = (theTable[spot])->getValue();
 			return true;
@@ -97,7 +101,7 @@ public:
 	}
 
 	float alpha(){
-		return 0;
+		return this->filledSlots / MAXHASH;
 	}
 };
 
@@ -107,24 +111,6 @@ void swapTwoValues(unsigned int& value1, unsigned int& value2){
 	value2 = temp;
 }
 
-unsigned int dumbHash(int key){
+unsigned int doHash(int key){
 	return key % MAXHASH;
-}
-
-unsigned int ELFHash(const char* str, unsigned int length){	//http://www.partow.net/programming/hashfunctions/#ELFHashFunction
-	unsigned int hash = 0;
-	unsigned int x = 0;
-	unsigned int i = 0;
-
-	for(i = 0; i < length; ++str, ++i){
-		hash = (hash << 4) + (*str);
-
-		if((x = hash & 0xF0000000L) != 0){
-			hash ^= (x >> 24);
-		}
-
-		hash &= ~x;
-	}
-
-	return hash;
 }
