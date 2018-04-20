@@ -1,6 +1,7 @@
 #pragma once
 #include "Slot.h"	//No cpp file because the requirements/instructions were contradictory
 #define MAXHASH 1000
+using namespace std;
 
 unsigned int doHash(int key);
 
@@ -19,6 +20,10 @@ public:
 		for(unsigned int i = 0; i < MAXHASH; i++){
 			delete theTable[i];
 		}
+	}
+
+	unsigned int getSize(){
+		return this->filledSlots;
 	}
 
 	void GenerateRandomTable(){
@@ -102,6 +107,16 @@ public:
 
 	float alpha(){
 		return this->filledSlots / MAXHASH;
+	}
+
+	template<class T> friend ostream& operator<<(ostream& out, const HashTable<T>& c){
+		cout << "\nHere is the tree" << endl;
+		for(unsigned int i = 0; i < MAXHASH; i++){
+			if(c->theTable[i]->isNormal()){
+				out << "Slot:" << i << "\tKey: " << c->theTable[i]->getKey() << "\tValue: " << c->theTable[i]->getValue() << endl;
+			}
+		}
+		return out;
 	}
 };
 
