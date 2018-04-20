@@ -27,6 +27,16 @@ public:
 		return this->filledSlots;
 	}
 
+	int getLargestKey(){	//Unused as far as I know
+		int largestValue INT_MIN;
+		for(unsigned int i = 0; i < MAXHASH; i++){
+			if(this->theTable[i]->getKey() > largestValue){
+				largestValue = this->theTable[i]->getKey();
+			}
+		}
+		return largestValue;
+	}
+
 	void GenerateRandomTable(){
 		for(unsigned int i = 0; i < MAXHASH; i++){
 			pseudoRandomTable[i] = i;
@@ -113,12 +123,12 @@ public:
 	template<class T> friend ostream& operator<<(ostream& out, const HashTable<T>& c){
 		unsigned short slotWidth = static_cast<unsigned short>(log10(MAXHASH));
 		unsigned short keyWidth = static_cast<unsigned short>(log10(INT_MAX));
-		out << setfill('0') << std::setiosflags(ios::right) << "\nHere is the tree" << endl;
+		out << "\nHere is the tree" << endl;
 		for(unsigned int i = 0; i < MAXHASH; i++){
 			//char t[32];
 			//sprintf_s(t, "%05d", i);
 			if(c.theTable[i]->isNormal()){
-				out << "Slot: " << setw(slotWidth) << i << setw(0) << "\tKey: " << setw(keyWidth) << c.theTable[i]->getKey() << setw(0) << "\tValue: " << c.theTable[i]->getValue() << endl;
+				out << "Slot: " << setw(slotWidth) << setfill('0') << setiosflags(ios::right) << i << setw(0) << "\tKey: " << setw(keyWidth) << setiosflags(ios::left) << setfill(' ') << c.theTable[i]->getKey() << setw(0) << "\tValue: " << c.theTable[i]->getValue() << endl;
 			}
 		}
 		return out;
