@@ -1,5 +1,6 @@
 #pragma once
 #include "Slot.h"	//No cpp file because the requirements/instructions were contradictory
+#include <cmath>
 #define MAXHASH 1000
 using namespace std;
 
@@ -110,10 +111,14 @@ public:
 	}
 
 	template<class T> friend ostream& operator<<(ostream& out, const HashTable<T>& c){
-		cout << "\nHere is the tree" << endl;
+		unsigned short slotWidth = static_cast<unsigned short>(log10(MAXHASH));
+		unsigned short keyWidth = static_cast<unsigned short>(log10(INT_MAX));
+		out << setfill('0') << std::setiosflags(ios::right) << "\nHere is the tree" << endl;
 		for(unsigned int i = 0; i < MAXHASH; i++){
-			if(c->theTable[i]->isNormal()){
-				out << "Slot:" << i << "\tKey: " << c->theTable[i]->getKey() << "\tValue: " << c->theTable[i]->getValue() << endl;
+			//char t[32];
+			//sprintf_s(t, "%05d", i);
+			if(c.theTable[i]->isNormal()){
+				out << "Slot: " << setw(slotWidth) << i << setw(0) << "\tKey: " << setw(keyWidth) << c.theTable[i]->getKey() << setw(0) << "\tValue: " << c.theTable[i]->getValue() << endl;
 			}
 		}
 		return out;
